@@ -10,11 +10,13 @@
 
 #define MAXLINE 2048
 
+//函数定义
+void tcp_operate(int socketfd, const char *sendline);
+
 int main() {
 
 	//定义接收发送buff
 	char sendline[MAXLINE];
-	char revline[MAXLINE];
 	char command[50];
 
 	//连接套接字编号
@@ -24,16 +26,19 @@ int main() {
 	struct sockaddr_in sockaddr;
 
 	//定义服务器地址和端口
-	char serverIp[15];
-	unsigned int serverPort;
+	char temp_server_ip[15];
+	char *server_ip;
+	unsigned int server_port;
 
 	//设置服务器地址
-	printf("Set Server IP\n");
-	fgets(serverIp, 15, stdin);
-
+	printf("Set Server IP:");
+	setbuf(stdin, NULL);
+	fgets(temp_server_ip, 15, stdin);
+	memcpy();
 	//设置端口
-	printf("Set Server port\n");
-	scanf("%d", &serverPort);
+	printf("Set Server port:");
+	setbuf(stdin,NULL);
+	scanf("%d", &server_port);
 	
 	//创建套接字
 	socketfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -42,9 +47,9 @@ int main() {
 	memset(&sockaddr, 0, sizeof(sockaddr));
 	sockaddr.sin_family = AF_INET;
 	//将整数数值转换程网络字节序(将设置端口数转换成符合tcp协议的数值)
-	sockaddr.sin_port = htons(serverPort);
+	sockaddr.sin_port = htons(server_port);
 	//将设置的服务器地址转换成符合tpc协议的数值
-	inet_pton(AF_INET, serverIp, &sockaddr.sin_addr);
+	inet_pton(AF_INET, server_ip, &sockaddr.sin_addr);
 
 	//连接服务器
 	if( (connect(socketfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr))) < 0 ) {
@@ -53,27 +58,28 @@ int main() {
 	}
 
 	while(1) {
+start:
 		//获取命令
+		setbuf(stdin, NULL);
+		printf("command >");
 		fgets(command, 50, stdin);
-		//筛选命令
-		switch() {
-		
-		}
+		setbuf(stdin, NULL);
 		//输入数据
+		printf("data >");
+		setbuf(stdin, NULL);
 		fgets(sendline, MAXLINE, stdin);
 
-		//发送数据
-		if(send(socketfd, sendline, strlen(sendline), 0) < 0) {
-			printf("send data error:%s\nerrno:%d\n", strerror(errno), errno);
+		//筛选命令
+		if(strcmp(command, "q") == 0) {
+			printf("program exit");
 			exit(0);
-		}
-
-		//打印数据
-		if(recv(socketfd, revline, strlen(revline), 0) < 0) {
-			printf("revice data error:%s\nerrno:%d\n", strerror(errno), errno);
-			exit(0);
-		} else {
-			printf("revice data: %x", revline);
+		} else if(strcmp(command, "sh")) {
+			goto start;
+		} else if( (strcmp(command, "s") == 0) || strlen(command) == 0 ) {
+			if(strlen(command) == 0) {
+				goto start;
+			}
+			tcp_operate(socketfd, sendline);
 		}
 	}
 
@@ -83,6 +89,30 @@ int main() {
 	return 0;
 }
 
-int selectCommand(const char *command) {
+void tcp_operate(int socketfd, const char *sendline) {
+	//接受数据buf
+	char revline[MAXLINE];
 
+	int length;
+	int i;
+
+	//发送数据
+	if(send(socketfd, sendline, strlen(sendline), 0) < 0) {
+		printf("send data error:%s\nerrno:%d\n", strerror(errno), errno);
+		exit(0);
+	}
+
+	//打印数据
+	if(recv(socketfd, revline, strlen(revline), 0) < 0) {
+		printf("revice data error:%s\nerrno:%d\n", strerror(errno), errno);
+		exit(0);
+	} else {
+		printf("revice data:%s\n", revline);
+		length = strlen(revline);
+		printf("revice data_hex:");
+		for(i=0;i<length;i++) {
+			printf("%#X\n ", (unsigned int)revline[i]);
+		}
+		printf("\n");
+	}
 }
