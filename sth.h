@@ -9,6 +9,6 @@
 //判断是否为16进制数
 int isHexChar(char const *hex);
 //讲十六进制字符串转换成十六进制
-void *stringToHex(char const *hex_string, int **hex);
+void stringToHex(char const *hex_string, int **hex);
 
 #endif
