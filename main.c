@@ -34,7 +34,8 @@ int main() {
 	printf("Set Server IP:");
 	setbuf(stdin, NULL);
 	fgets(temp_server_ip, 15, stdin);
-	memcpy();
+	server_ip = (char *)malloc(strlen(temp_server_ip));
+	memcpy(server_ip, temp_server_ip, strlen(temp_server_ip));
 	//设置端口
 	printf("Set Server port:");
 	setbuf(stdin,NULL);
