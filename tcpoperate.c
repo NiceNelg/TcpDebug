@@ -41,8 +41,8 @@ int tcp_connect(char *temp_server_ip, int server_port) {
 	}
 
 	//连接服务器
-	if( (connect_status = connect()) ) {
-	
+	if( (connect_status = connect(fd, (struct sockaddr *)&sockaddr_in, sizeof(sockaddr_in)) < 0) ) {
+		
 	}
 
 	return fd;
