@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <errno.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include "tcpoperate.h"
 #include "sth.h"
 
 #define MAXLINE 2048
@@ -32,47 +24,24 @@ int main() {
 
 	//连接套接字编号
 	int socketfd;
-	
-	//定义服务器地址结构体变量
-	struct sockaddr_in sockaddr;
-
-	//定义服务器地址和端口
-	char temp_server_ip[15];
+	//连接服务器地址和端口号
 	char *server_ip;
-	unsigned int server_port;
-
-	//连接状态
-	int status;
+	int server_port;
 
 	//设置服务器地址
 	printf("Set Server IP:");
 	setbuf(stdin, NULL);
-	fgets(temp_server_ip, 15, stdin);
-	server_ip = (char *)malloc(strlen(temp_server_ip));
-	memcpy(server_ip, temp_server_ip, strlen(temp_server_ip));
+	server_ip = (char *)malloc(sizeof(char) * 20);
+	fgets(server_ip, 20, stdin);
 	//设置端口
 	printf("Set Server port:");
 	setbuf(stdin,NULL);
 	scanf("%d", &server_port);
 	
-	//创建套接字
-	socketfd = socket(AF_INET, SOCK_STREAM, 0);
-
-	//初始化变量
-	memset(&sockaddr, 0, sizeof(sockaddr));
-	sockaddr.sin_family = AF_INET;
-	//将整数数值转换程网络字节序(将设置端口数转换成符合tcp协议的数值)
-	sockaddr.sin_port = htons(server_port);
-	//将设置的服务器地址转换成符合tpc协议的数值
-	inet_pton(AF_INET, server_ip, &sockaddr.sin_addr);
-	
-	status = connect(socketfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr));
+	socketfd = tcp_connect(server_ip, server_port);
 	//连接服务器
-	if( status < 0 ) {
-		printf("connect error %s\nerrorno: %d\n", strerror(errno), errno);
+	if( socketfd < 0 ) {
 		exit(0);
-	} else if( status == 0 ) {
-		printf("connect success\n");
 	}
 
 	while(1) {
