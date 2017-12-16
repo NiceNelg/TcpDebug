@@ -1,5 +1,6 @@
 #include "tcpoperate.h"
 #include "sth.h"
+#include <curses.h>
 
 #define MAXLINE 2048
 
