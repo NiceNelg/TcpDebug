@@ -8,5 +8,7 @@ int main() {
 
 	getch();
 
-	return 1;
+	display_end(&win);
+
+	return 0;
 }
