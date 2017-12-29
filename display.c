@@ -8,9 +8,12 @@ void static display_getwindosinfo( display_win *win ) {
 //初始化屏幕
 void display_init(display_win **win) {
 	//初始化窗口结构体
-	*win = (display_win *)malloc( (sizeof(display_win_info) + sizeof(WINDOW)) * 3 + sizeof(struct winsize) );
+	*win = (display_win *)malloc( (sizeof(display_win_info) + sizeof(WINDOW)) * 6 + sizeof(struct winsize) );
+	(*win)->win_tip_send.index = (WINDOW *)malloc(sizeof(WINDOW));
 	(*win)->win_send.index = (WINDOW *)malloc(sizeof(WINDOW));
+	(*win)->win_tip_revice.index = (WINDOW *)malloc(sizeof(WINDOW));
 	(*win)->win_revice.index = (WINDOW *)malloc(sizeof(WINDOW));
+	(*win)->win_tip_command.index = (WINDOW *)malloc(sizeof(WINDOW));
 	(*win)->win_command.index = (WINDOW *)malloc(sizeof(WINDOW));
 	
 	//获取当前终端信息
