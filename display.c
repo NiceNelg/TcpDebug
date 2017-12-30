@@ -8,7 +8,7 @@ void static display_getwindosinfo( display_win *win ) {
 //初始化屏幕
 void display_init(display_win **win) {
 	//初始化窗口结构体
-	*win = (display_win *)malloc( (sizeof(display_win_info) + sizeof(WINDOW)) * 6 + sizeof(struct winsize) );
+	*win = (display_win *)malloc(sizeof(display_win));
 	(*win)->win_tip_send.index = (WINDOW *)malloc(sizeof(WINDOW));
 	(*win)->win_send.index = (WINDOW *)malloc(sizeof(WINDOW));
 	(*win)->win_tip_revice.index = (WINDOW *)malloc(sizeof(WINDOW));
@@ -26,15 +26,7 @@ void display_init(display_win **win) {
 
 	//新窗口(行，列,begin_y,begin_x) 
 	//建立子窗口
-	(*win)->win_send.index = derwin(
-			stdscr,
-			(int)( (*win)->terminal_info.ws_row * 0.8 ), 
-			(int)( (*win)->terminal_info.ws_col / 2 ), 
-			0,
-			0
-	);
-	
-	box( (*win)->win_send.index,ACS_VLINE,ACS_HLINE); 
+	//划线
 
   mvwprintw( (*win)->win_send.index, 1, 1, "send windows"); 
 
@@ -49,6 +41,71 @@ void display_init(display_win **win) {
 //建立发送窗口
 void static display_init_send(display_win *win) {
 
+	//记录发送提示窗口所占的位置
+	win->win_tip_send.row = 2;
+	win->win_tip_send.col = (int)(win->terminal_info.ws_col / 2);
+	//相对于终端窗口建立发送提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
+	win->win_tip_send.index = derwin(
+			stdscr,
+			win->win_tip_send.row,
+			win->win_tip_send.col,
+			0,
+			0
+	);
+	//给发送提示窗口划线
+	box( win->win_tip_send.index,ACS_VLINE,ACS_HLINE); 
+	//设置发送提示窗口内容
+  mvwprintw(win->win_tip_send.index, 1, 1, "发送窗口"); 
+
+	//记录发送窗口所占位置
+	win->win_send.row = (int)( (win->terminal_info.ws_row - win->win_tip_send.row - 1) * 0.8 );
+	win->win_send.col = (int)(win->terminal_info.ws_col / 2);
+	//相对于终端窗口建立发送提示窗口，并记录窗口索引
+	win->win_send.index = derwin(
+			stdscr,
+			win->win_send.row,
+			win->win_send.col,
+			(win->win_tip_send.row + 1),
+			0
+	);
+
+	//给发送窗口划线
+	box( win->win_send.index,ACS_VLINE,ACS_HLINE); 
+}
+
+//建立接收窗口
+void static display_init_revice(display_win *win) {
+
+	//记录接收提示窗口所占的位置
+	win->win_tip_revice.row = 2;
+	win->win_tip_revice.col = (int)(win->terminal_info.ws_col - win->win_tip_send.col - 1);
+	//相对于终端窗口建立接收提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
+	win->win_tip_send.index = derwin(
+			stdscr,
+			win->win_tip_revice.row,
+			win->win_tip_revice.col,
+			0,
+			(win->win_tip_send.col + 1)
+	);
+	//给接收提示窗口划线
+	box( win->win_tip_revice.index,ACS_VLINE,ACS_HLINE); 
+	//设置接收提示窗口内容
+  mvwprintw(win->win_tip_revice.index, 1, 1, "接收窗口"); 
+
+	//记录接收窗口所占位置
+	win->win_revice.row = (int)( (win->terminal_info.ws_row - win->win_tip_revice.row - 1) * 0.8 );
+	win->win_revice.col = (int)(win->terminal_info.ws_col - win->win_send.col - 1);
+	//相对于终端窗口建立接收提示窗口，并记录窗口索引
+	win->win_send.index = derwin(
+			stdscr,
+			win->win_revice.row,
+			win->win_revice.col, 
+			(win->win_tip_revice.row + 1),
+			(win->win_send.col + 1)
+	);
+
+	//给接收窗口划线
+	box( win->win_revice.index,ACS_VLINE,ACS_HLINE); 
 }
 
 //删除屏幕
