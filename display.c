@@ -23,17 +23,12 @@ void display_init(display_win **win) {
 	initscr();
 	//开启键盘特殊字元输入
 	keypad(stdscr, true);
-
-	//新窗口(行，列,begin_y,begin_x) 
-	//建立子窗口
-	//划线
-
-  mvwprintw( (*win)->win_send.index, 1, 1, "send windows"); 
-
-  mvwprintw( (*win)->win_send.index,2,1,"www.deepfuturesoft.info");
-
+	//建立主体窗口
+	display_init_send(*win);
+	display_init_revice(*win);
+	display_init_command(*win);
 	refresh();
-	wrefresh((*win)->win_send.index);
+	//wrefresh((*win)->win_send.index);
 	//touchwin((*win)->win_send);
 
 }
@@ -189,3 +184,5 @@ void display_end(display_win **win) {
 	//释放指针
 	free(*win);
 }
+
+

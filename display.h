@@ -49,6 +49,13 @@ void static display_getwindosinfo( display_win *win );
 //初始化屏幕
 void display_init(display_win **win);
 
+//初始化发送窗口
+void static display_init_send(display_win *win);
+//初始化接收窗口
+void static display_init_revice(display_win *win);
+//初始化命令窗口
+void static display_init_command(display_win *win);
+
 //删除窗口
 void display_del(display_win *win, const char *member);
 
