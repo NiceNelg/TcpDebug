@@ -9,15 +9,20 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdint.h>
 
 //定义窗口信息结构体
 typedef struct display_win_info {
 	//curses库WINDOW序号
 	WINDOW *index;
+	//窗口起始行
+	uint16_t row_start;
 	//窗口所占行数
-	unsigned short int row;
+	uint16_t row;
+	//窗口起始列
+	uint16_t col_start;
 	//窗口所占列数
-	unsigned int col;
+	uint16_t col;
 }display_win_info;
 
 //定义窗口结构体
