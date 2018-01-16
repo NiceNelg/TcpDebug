@@ -1,7 +1,8 @@
 #ifndef __DISPLAY__
 #define __DISPLAY__
 
-#include <curses.h>
+#include <locale.h>
+#include <ncursesw/curses.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>

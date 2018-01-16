@@ -19,8 +19,11 @@ void display_init(display_win **win) {
 	//获取当前终端信息
 	display_getwindosinfo(*win);
 	
+	//兼容中文字符
+	setlocale(LC_ALL, "");
 	//开启curses库
 	initscr();
+	noecho();
 	//开启键盘特殊字元输入
 	keypad(stdscr, true);
 	//建立主体窗口
@@ -38,7 +41,7 @@ void static display_init_send(display_win *win) {
 
 	//记录发送提示窗口的起始位置和所占的位置
 	win->win_tip_send.row_start = 0;
-	win->win_tip_send.row = 2;
+	win->win_tip_send.row = 3;
 	win->win_tip_send.col_start = 0;
 	win->win_tip_send.col = (int)(win->terminal_info.ws_col / 2);
 	//相对于终端窗口建立发送提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
@@ -77,7 +80,7 @@ void static display_init_revice(display_win *win) {
 
 	//记录接收提示窗口的起始位置和所占位置
 	win->win_tip_revice.row_start = 0;
-	win->win_tip_revice.row = 2;
+	win->win_tip_revice.row = 3;
 	win->win_tip_revice.col_start = win->win_tip_send.col_start + win->win_tip_send.col + 1;
 	win->win_tip_revice.col = (int)(win->terminal_info.ws_col - win->win_tip_send.col_start - win->win_tip_send.col - 1);
 	//相对于终端窗口建立接收提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
@@ -116,7 +119,7 @@ void static display_init_command(display_win *win) {
 
 	//记录命令提示窗口的起始位置和所占的位置
 	win->win_tip_command.row_start = win->win_send.row_start + win->win_send.row + 1;
-	win->win_tip_command.row = 2;
+	win->win_tip_command.row = 3;
 	win->win_tip_command.col_start = 0;
 	win->win_tip_command.col = win->terminal_info.ws_col;
 	//相对于终端窗口建立命令提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
@@ -130,7 +133,7 @@ void static display_init_command(display_win *win) {
 	//给命令提示窗口划线
 	box( win->win_tip_command.index,ACS_VLINE,ACS_HLINE); 
 	//设置命令提示窗口内容
-  mvwprintw(win->win_tip_command.index, 1, 1, "发送窗口"); 
+  mvwprintw(win->win_tip_command.index, 1, 1, "数据发送窗口"); 
 
 	//记录命令窗口所占位置
 	win->win_command.row_start = win->win_tip_command.row_start + win->win_tip_command.row + 1;
