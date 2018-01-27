@@ -31,9 +31,8 @@ void display_init(display_win **win) {
 	display_init_revice(*win);
 	display_init_command(*win);
 	refresh();
-	//wrefresh((*win)->win_send.index);
-	//touchwin((*win)->win_send);
-
+	//初始定位
+	move((*win)->win_command.row_start + 1, (*win)->win_command.col_start + 1);
 }
 
 //建立发送窗口
@@ -53,7 +52,7 @@ void static display_init_send(display_win *win) {
 			win->win_tip_send.col_start
 	);
 	//给发送提示窗口划线
-	box( win->win_tip_send.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_tip_send.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 	//设置发送提示窗口内容
   mvwprintw(win->win_tip_send.index, 1, 1, "发送窗口"); 
 
@@ -72,7 +71,7 @@ void static display_init_send(display_win *win) {
 	);
 
 	//给发送窗口划线
-	box( win->win_send.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_send.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 }
 
 //建立接收窗口
@@ -92,7 +91,7 @@ void static display_init_revice(display_win *win) {
 			win->win_tip_revice.col_start
 	);
 	//给接收提示窗口划线
-	box( win->win_tip_revice.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_tip_revice.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 	//设置接收提示窗口内容
   mvwprintw(win->win_tip_revice.index, 1, 1, "接收窗口"); 
 
@@ -111,7 +110,7 @@ void static display_init_revice(display_win *win) {
 	);
 
 	//给接收窗口划线
-	box( win->win_revice.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_revice.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 }
 
 //建立命令发送窗口
@@ -131,7 +130,7 @@ void static display_init_command(display_win *win) {
 			win->win_tip_command.col_start
 	);
 	//给命令提示窗口划线
-	box( win->win_tip_command.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_tip_command.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 	//设置命令提示窗口内容
   mvwprintw(win->win_tip_command.index, 1, 1, "数据发送窗口"); 
 
@@ -150,7 +149,7 @@ void static display_init_command(display_win *win) {
 	);
 
 	//给接收窗口划线
-	box( win->win_command.index,ACS_VLINE,ACS_HLINE); 
+	wborder( win->win_command.index,'|','|', '-', '-', '-', '-', '-', '-'); 
 }
 
 //删除屏幕
