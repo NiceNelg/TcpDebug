@@ -24,6 +24,7 @@ void display_init(display_win **win) {
 	//开启curses库
 	initscr();
 	noecho();
+	cbreak();
 	//开启键盘特殊字元输入
 	keypad(stdscr, true);
 	//建立主体窗口
