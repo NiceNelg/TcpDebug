@@ -1,6 +1,7 @@
 #include "tcpoperate.h"
 #include "sth.h"
 #include "display.h"
+#include "ncursesw/curses.h"
 
 int main() {
 	
@@ -8,7 +9,7 @@ int main() {
 	display_win *win;
 	display_init(&win);
 	while(1) {
-		c=wgetch(win->win_send);
+		c=wgetch(&(*win).win_send);
 		switch(c) {
 			case 'q':{
 				display_end(&win);
