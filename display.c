@@ -30,6 +30,8 @@ void display_init(display_win **win) {
 	display_init_send(*win);
 	display_init_revice(*win);
 	display_init_command(*win);
+	//移动光标到初始位置
+	move( (*win)->win_command.row_start+1, (*win)->win_command.col_start+1 );
 	refresh();
 	//wrefresh((*win)->win_send.index);
 	//touchwin((*win)->win_send);
