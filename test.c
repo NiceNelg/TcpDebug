@@ -3,7 +3,6 @@
 
 int main() {
 
-	setlocale(LC_ALL, "");
 	display_win *win;
 	display_init(&win);
 	getch();

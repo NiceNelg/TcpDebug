@@ -31,6 +31,8 @@ void display_init(display_win **win) {
 	display_init_send(*win);
 	display_init_revice(*win);
 	display_init_command(*win);
+	//移动光标到初始位置
+	move( (*win)->win_command.row_start+1, (*win)->win_command.col_start+1 );
 	refresh();
 	//初始定位
 	move((*win)->win_command.row_start + 1, (*win)->win_command.col_start + 1);
@@ -53,12 +55,12 @@ void static display_init_send(display_win *win) {
 			win->win_tip_send.col_start
 	);
 	//给发送提示窗口划线
-	wborder( win->win_tip_send.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_tip_send.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 	//设置发送提示窗口内容
   mvwprintw(win->win_tip_send.index, 1, 1, "发送窗口"); 
 
 	//记录发送窗口的起始位置和所占位置
-	win->win_send.row_start = (win->win_tip_send.row_start + win->win_tip_send.row + 1);
+	win->win_send.row_start = (win->win_tip_send.row_start + win->win_tip_send.row);
 	win->win_send.row = (int)( (win->terminal_info.ws_row - win->win_tip_send.row_start - win->win_tip_send.row - 1) * 0.8 );
 	win->win_send.col_start = 0;
 	win->win_send.col = (int)(win->terminal_info.ws_col / 2);
@@ -72,7 +74,7 @@ void static display_init_send(display_win *win) {
 	);
 
 	//给发送窗口划线
-	wborder( win->win_send.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_send.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 }
 
 //建立接收窗口
@@ -81,8 +83,8 @@ void static display_init_revice(display_win *win) {
 	//记录接收提示窗口的起始位置和所占位置
 	win->win_tip_revice.row_start = 0;
 	win->win_tip_revice.row = 3;
-	win->win_tip_revice.col_start = win->win_tip_send.col_start + win->win_tip_send.col + 1;
-	win->win_tip_revice.col = (int)(win->terminal_info.ws_col - win->win_tip_send.col_start - win->win_tip_send.col - 1);
+	win->win_tip_revice.col_start = win->win_tip_send.col_start + win->win_tip_send.col;
+	win->win_tip_revice.col = (int)(win->terminal_info.ws_col - win->win_tip_send.col_start - win->win_tip_send.col);
 	//相对于终端窗口建立接收提示窗口,并记录窗口索引,从0行0列开始，占终端窗口的2行，宽度为半屏
 	win->win_tip_revice.index = derwin(
 			stdscr,
@@ -92,15 +94,15 @@ void static display_init_revice(display_win *win) {
 			win->win_tip_revice.col_start
 	);
 	//给接收提示窗口划线
-	wborder( win->win_tip_revice.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_tip_revice.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 	//设置接收提示窗口内容
   mvwprintw(win->win_tip_revice.index, 1, 1, "接收窗口"); 
 
 	//记录接收窗口的起始位置和所占位置
-	win->win_revice.row_start = win->win_tip_revice.row_start + win->win_tip_revice.row + 1;
+	win->win_revice.row_start = win->win_tip_revice.row_start + win->win_tip_revice.row;
 	win->win_revice.row = (int)( (win->terminal_info.ws_row - win->win_tip_revice.row_start - win->win_tip_revice.row - 1) * 0.8 );
-	win->win_revice.col_start = win->win_send.col_start + win->win_send.col + 1;
-	win->win_revice.col = (int)(win->terminal_info.ws_col - win->win_send.col_start - win->win_send.col - 1);
+	win->win_revice.col_start = win->win_send.col_start + win->win_send.col;
+	win->win_revice.col = (int)(win->terminal_info.ws_col - win->win_send.col_start - win->win_send.col);
 	//相对于终端窗口建立接收提示窗口，并记录窗口索引
 	win->win_revice.index = derwin(
 			stdscr,
@@ -111,14 +113,14 @@ void static display_init_revice(display_win *win) {
 	);
 
 	//给接收窗口划线
-	wborder( win->win_revice.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_revice.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 }
 
 //建立命令发送窗口
 void static display_init_command(display_win *win) {
 
 	//记录命令提示窗口的起始位置和所占的位置
-	win->win_tip_command.row_start = win->win_send.row_start + win->win_send.row + 1;
+	win->win_tip_command.row_start = win->win_send.row_start + win->win_send.row;
 	win->win_tip_command.row = 3;
 	win->win_tip_command.col_start = 0;
 	win->win_tip_command.col = win->terminal_info.ws_col;
@@ -131,12 +133,12 @@ void static display_init_command(display_win *win) {
 			win->win_tip_command.col_start
 	);
 	//给命令提示窗口划线
-	wborder( win->win_tip_command.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_tip_command.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 	//设置命令提示窗口内容
   mvwprintw(win->win_tip_command.index, 1, 1, "数据发送窗口"); 
 
 	//记录命令窗口所占位置
-	win->win_command.row_start = win->win_tip_command.row_start + win->win_tip_command.row + 1;
+	win->win_command.row_start = win->win_tip_command.row_start + win->win_tip_command.row;
 	win->win_command.row = (int)(win->terminal_info.ws_row - win->win_command.row_start);
 	win->win_command.col_start = 0;
 	win->win_command.col = (int)(win->terminal_info.ws_col);
@@ -150,7 +152,7 @@ void static display_init_command(display_win *win) {
 	);
 
 	//给接收窗口划线
-	wborder( win->win_command.index,'|','|', '-', '-', '-', '-', '-', '-'); 
+	wborder( win->win_command.index, '|', '|', '-', '-', '+', '+', '+', '+' );
 }
 
 //删除屏幕
