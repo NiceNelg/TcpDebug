@@ -3,21 +3,19 @@
 #include "display.h"
 #include "ncursesw/curses.h"
 
+struct server_info {
+	int port;
+	char ip[];
+};
+
 int main() {
 	
-	char c;
+	//初始化屏幕
 	display_win *win;
 	display_init(&win);
-	while(1) {
-		c=wgetch(&(*win).win_send);
-		switch(c) {
-			case 'q':{
-				display_end(&win);
-				return 0;
-			}
-			break;
-		}
-	}
+	
+	//初始化TCP客户端连接
+	
 	return 0;
 
 }
