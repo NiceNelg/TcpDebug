@@ -1,7 +1,7 @@
 #include "tcpoperate.h"
 
 //设置连接超时时间
-static const int TIMEOUT_TIME = 6;
+static const int TIMEOUT_TIME = 2;
 
 int tcp_connect(char *temp_server_ip, int server_port) {
 	//服务器地址
@@ -22,10 +22,12 @@ int tcp_connect(char *temp_server_ip, int server_port) {
 	int status = -1;
 	//连接状态码长度
 	int len;
+	//重连次数
+	int times = 0;
 
 	//保证传入的服务器地址数据正确性
 	server_ip = (char *)malloc(sizeof(char) * strlen(temp_server_ip));
-	memcpy(server_ip, temp_server_ip, strlen(temp_server_ip) - 1);
+	memcpy(server_ip, temp_server_ip, strlen(temp_server_ip));
 
 	//创建套接字
 	if( ( fd = socket(AF_INET, SOCK_STREAM, 0) ) < 0 ){
@@ -62,6 +64,10 @@ int tcp_connect(char *temp_server_ip, int server_port) {
 			printf("connect fail\n");
 			return -1;
 		}
+		if( connect_status == 0 ) {
+			printf("connect completed immediately\n");
+			goto done;
+		}
 		//初始化时间结构体
 		timeval.tv_sec = TIMEOUT_TIME;
 		//此结构体成员代表设置的毫秒数
@@ -93,8 +99,10 @@ int tcp_connect(char *temp_server_ip, int server_port) {
 		//第三，timeout的值大于0，这就是等待的超时时间，即select在timeout时间内阻塞，超时时间之内有事件到来就
 		//返回了，否则在超时后不管怎样一定返回，返回值同上述。			
 		
-		//连接6秒，超时则代表连接失败
+		//连接10秒，超时则代表连接失败
+start:
 		connect_status = select(fd+1, NULL, &wset, NULL, &timeval);
+		times++;
 		switch( connect_status ) {
 			case -1:{
 				printf("connect error\n");
@@ -109,22 +117,35 @@ int tcp_connect(char *temp_server_ip, int server_port) {
 			default:{
 				//判断套接字编号是否在文件描述符集合中
 				if(FD_ISSET(fd, &wset)) {
-					//判断连接套接字状态
-					if(getsockopt(fd, SOL_SOCKET, SO_ERROR, &status, (socklen_t *)&len) < 0) {
-						return -1;
-					}
-					if( status == 0 ) {
+					//判断连接套接字状态（注释中的方法只在Unix系统中有用）
+					//if(getsockopt(fd, SOL_SOCKET, SO_ERROR, &status, (socklen_t *)&len) < 0) {
+					//	printf("connect error\n");
+					//	return -1;
+					//}
+					//if( status == 0 ) {
+					//	connect_status = 1;
+					//} else {
+					//	connect_status = 0;
+					//}
+					//在Linux系统下判断连接是否成功需要多次执行select+connect两个函数才能判断连接是否成功，
+					//若只是再次执行connect函数判断errno码有可能返回EINPROGRESS状态码表示正在连接，但需要检测
+					//才能判断是否连接成功
+					connect(fd, (struct sockaddr *)&sockaddr, sizeof(sockaddr));
+					if(errno != EISCONN && times < 6) {
+						goto start;
+					} else if( errno == EISCONN ) {
 						connect_status = 1;
 					} else {
-						connect_status = 0;
-					}
-					
+						printf("connect fail\n"); 
+						return -2;
+					}					
 				}
 				printf("connect success\n");
 			}break;
 		}
 	}
 
+done:
 	//将套接字设置回阻塞状态
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & O_NONBLOCK);
 
