@@ -6,7 +6,9 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
+	//屏蔽信号
 	
+
 	//初始化TCP客户端连接参数
 	server_info server_info;
 	server_info.ip = (char *)malloc(15 * sizeof(char));
@@ -21,7 +23,9 @@ int main(int argc, char *argv[]) {
 	display_win *win;
 	display_init(&win);
 	//开始操作流程
-	link_start(server_info, win);
+	operate_set operate_set;
+	operate_start(&operate_set);
+	getch();
 	display_end(&win);
 	return 0;
 

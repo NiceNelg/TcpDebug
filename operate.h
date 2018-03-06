@@ -6,6 +6,13 @@
 #include "display.h"
 #include "tcpoperate.h"
 
-void link_start(server_info server_info, display_win_info *win);
+typedef struct operate_set{
+	//屏蔽的信号集
+	sigset_t set;
+
+}operate_set;
+
+void operate_start( operate_set *operate_set );
+//void operator_start(server_info server_info, display_win *win);
 
 #endif
