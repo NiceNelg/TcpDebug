@@ -12,6 +12,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+typedef struct server_info {
+	int port;
+	char *ip;
+	int fd;
+}server_info;
+
 int tcp_connect(char *temp_server_ip, int server_port);
 
 

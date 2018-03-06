@@ -137,7 +137,7 @@ start:
 						connect_status = 1;
 					} else {
 						printf("connect fail\n"); 
-						return -2;
+						return -1;
 					}					
 				}
 				printf("connect success\n");
