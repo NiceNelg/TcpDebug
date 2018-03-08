@@ -44,6 +44,9 @@ typedef struct win {
 	struct winsize terminal_info;
 }display_win;
 
+//声明全局变量
+extern display_win *win;
+
 //获取屏幕信息
 void static display_getwindosinfo( display_win *win );
 

@@ -20,11 +20,9 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	//初始化屏幕
-	display_win *win;
 	display_init(&win);
 	//开始操作流程
-	operate_set operate_set;
-	operate_start(&operate_set);
+	operate_start();
 	getch();
 	display_end(&win);
 	return 0;

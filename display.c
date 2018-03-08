@@ -1,5 +1,8 @@
 #include "display.h"
 
+//定义全局指针win
+display_win *win;
+
 //获取屏幕信息
 void static display_getwindosinfo( display_win *win ) {
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &(*win).terminal_info);
