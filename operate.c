@@ -1,10 +1,9 @@
 #include "operate.h"
-#include "tcpoperate.h"
-#include "display.h"
-#include <signal.h>
 
-void operate_start(display_win **win) {
+void operate_start() {
+	//为特定信号注册回调方法
 	operate_registersignal();
+	//开启键盘检测线程，检测键盘输入执行指定命令
 }
 
 

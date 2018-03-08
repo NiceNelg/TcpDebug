@@ -3,8 +3,9 @@
 
 #include <pthread.h>
 #include "sth.h"
-#include "display.h"
 #include "tcpoperate.h"
+#include "display.h"
+#include <signal.h>
 
 void operate_start();
 
@@ -12,6 +13,5 @@ void operate_start();
 
 void operate_registersignal();
 
-//当接收到终止信号时执行的方法
 void operate_sigint(int sign);
 #endif
