@@ -2,13 +2,10 @@
 #include "sth.h"
 #include "display.h"
 #include <ncursesw/curses.h>
-#include "operate.h"
+#include "controller.h"
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-	//屏蔽信号
-	
-
 	//初始化TCP客户端连接参数
 	server_info server_info;
 	server_info.ip = (char *)malloc(15 * sizeof(char));
@@ -20,11 +17,10 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	//初始化屏幕
-	display_init(&win);
+	//display_init(&win);
 	//开始操作流程
-	operate_start();
-	getch();
-	display_end(&win);
+	controller_start();
+	while(1) {}
 	return 0;
 
 }

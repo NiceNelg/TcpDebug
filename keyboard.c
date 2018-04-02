@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-//
+//初始化键盘
 void keyboard_init() {
 	//获取输入串口（键盘的串口文件符为0）的配置
 	tcgetattr(0, &keyboard_setting);
@@ -11,10 +11,11 @@ void keyboard_init() {
 	keyboard_new_setting.c_lflag |= ISIG;
 	keyboard_new_setting.c_cc[VMIN] = 1;
 	keyboard_new_setting.c_cc[VTIME] = 0;
-	//
+	//将新的键盘配置设置到输入串口
 	tcsetattr(0, TCSANOW, &keyboard_new_setting);
 }
 
+//键盘键入触发的事件
 int keyboard_hit() {
 	unsigned char ch;
 	int nread;
@@ -47,6 +48,7 @@ int keyboard_readch() {
 	return ch;
 }
 
+//结束键盘监听
 void keyboard_close() {
 	tcsetattr(0, TCSANOW, &keyboard_setting);
 }
