@@ -41,7 +41,7 @@ static void controller_keyboard_hit() {
 		printf("String\n");
 	} else if(controller_char == command.exit) {
 		//退出程序
-		printf("exit\n");
+		controller_sigint(0);
 	} else {
 		//输入数据
 		printf("Input\n");
