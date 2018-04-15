@@ -6,9 +6,9 @@ void keyboard_init() {
 	tcgetattr(0, &keyboard_setting);
 	//创建新的串口配置
 	keyboard_new_setting = keyboard_setting;
-	keyboard_new_setting.c_lflag |= ICANON;
-	keyboard_new_setting.c_lflag |= ECHO;
-	keyboard_new_setting.c_lflag |= ISIG;
+	keyboard_new_setting.c_lflag &= ~ICANON;
+	keyboard_new_setting.c_lflag &= ~ECHO;
+	keyboard_new_setting.c_lflag &= ~ISIG;
 	keyboard_new_setting.c_cc[VMIN] = 1;
 	keyboard_new_setting.c_cc[VTIME] = 0;
 	//将新的键盘配置设置到输入串口
@@ -35,6 +35,7 @@ int keyboard_hit() {
 	return 0;
 }
 
+//读取键盘输入内容
 int keyboard_readch() {
 	char ch;
 

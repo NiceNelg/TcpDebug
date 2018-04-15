@@ -8,11 +8,24 @@
 #include <signal.h>
 #include "keyboard.h"
 
+//控制器的线程变量
 typedef struct{
 	pthread_t keyboard;
 	pthread_t display;
 	pthread_t tcpoperate;
-}controller;
+}controller_pthread;
+
+//各命令对应编码
+typedef struct{
+	//发送数据
+	int send;
+	//切换成16进制数据
+	int hex;
+	//切换成普通字符串数据
+	int string;
+	//退出程序
+	int exit;
+}controller_command;
 
 void controller_start();
 
